@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Business Law Final Exam – Timed (80 Questions)</title>
+  <style>
+    :root {
+      --bg:#0b0f14; --panel:#111822; --muted:#9fb0c3; --ink:#e7eef7; --accent:#4da3ff; --ok:#1db954; --bad:#ff4d4f; --warn:#ffd166;
+    }
+    html,body{height:100%; margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif; background:var(--bg); color:var(--ink);}    
+    .container{max-width:1100px; margin:0 auto; padding:24px;}
+    header{position:sticky; top:0; background:linear-gradient(180deg, rgba(11,15,20,.95), rgba(11,15,20,.6)); backdrop-filter:blur(6px); z-index:20; border-bottom:1px solid #1b2533}
+    header .bar{display:flex; gap:16px; align-items:center; justify-content:space-between; padding:12px 24px;}
+    .timer{position:fixed; right:16px; top:16px; background:var(--panel); border:1px solid #223246; padding:10px 14px; border-radius:12px; box-shadow: 0 6px 20px rgba(0,0,0,.35); font-weight:700; z-index:30}
+    .timer.soon{background:#2a1b00; border-color:#5f3a00; color:#ffd166}
+    .timer.over{background:#2a0000; border-color:#5f0000; color:#ffaaaa}
+    .pill{display:inline-block; padding:.25rem .6rem; border:1px solid #2a3a52; border-radius:999px; color:var(--muted); font-size:.9rem}
+    h1{font-size:1.6rem; margin:18px 0 0}
+    h2{font-size:1.25rem; margin:18px 0 8px}
+    details{background:var(--panel); border:1px solid #223246; border-radius:16px; padding:12px 16px; margin:14px 0}
+    summary{cursor:pointer; color:var(--muted)}
+    .section{background:var(--panel); border:1px solid #223246; border-radius:16px; padding:16px 18px; margin:20px 0}
+    .q{padding:12px 12px; border-bottom:1px dashed #25344a}
+    .q:last-child{border-bottom:none}
+    .q h4{margin:0 0 8px; font-size:1rem; color:#cde0f7}
+    .q small{color:var(--muted)}
+    .answers{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+    .answers label{display:flex; gap:8px; align-items:center; background:#0f151f; border:1px solid #213149; padding:8px 10px; border-radius:10px; cursor:pointer}
+    .answers input[type="radio"], .answers input[type="checkbox"]{accent-color:var(--accent)}
+    .mc-select{background:#0f151f; border:1px solid #213149; color:var(--ink); padding:8px; border-radius:10px}
+    .short{display:flex; gap:10px; align-items:center}
+    .short textarea{flex:1; min-height:80px; background:#0f151f; border:1px solid #213149; color:var(--ink); border-radius:10px; padding:10px}
+    .short .points{width:90px; display:flex; flex-direction:column; gap:6px}
+    input[type="number"]{background:#0f151f; border:1px solid #213149; color:var(--ink); border-radius:10px; padding:8px}
+    .meta{display:flex; flex-wrap:wrap; gap:8px; color:var(--muted)}
+    .btn{background:var(--accent); color:#061626; border:none; font-weight:700; padding:12px 16px; border-radius:12px; cursor:pointer}
+    .btn.secondary{background:#203147; color:#cde0f7; border:1px solid #2a4060}
+    .btn.ghost{background:transparent; border:1px solid #2a4060; color:#9cb9df}
+    .grid{display:grid; gap:12px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .legend{display:flex; gap:12px; align-items:center; color:var(--muted)}
+    .badge{padding:.2rem .5rem; border-radius:8px; background:#102033; border:1px solid #1f3150; color:#b9cbe4}
+    .wrong{outline:2px solid var(--bad); background:#2a1010}
+    .right{outline:2px solid var(--ok); background:#0f2416}
+    .second-chance{margin-top:8px; padding:8px; border-radius:10px; background:#141c28; border:1px dashed #2b3d59}
+    .sticky-bottom{position:sticky; bottom:0; display:flex; gap:10px; justify-content:flex-end; background:linear-gradient(180deg, rgba(11,15,20,0), rgba(11,15,20,1)); padding:16px; border-top:1px solid #1b2533}
+    .score-card{background:#09121d; border:1px solid #223246; border-radius:14px; padding:12px 14px;}
+    .overlay{position:fixed; inset:0; background:radial-gradient(1000px 600px at 70% -10%, #1a2a44, #0b0f14 60%); display:flex; align-items:center; justify-content:center; z-index:50}
+    .gate{max-width:820px; background:var(--panel); border:1px solid #223246; padding:24px; border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,.45)}
+    .story{white-space:pre-wrap; background:#0e151f; border:1px solid #1e2c43; padding:12px; border-radius:12px}
+    .hidden{display:none !important}
+  </style>
+</head>
+<body>
+  <div id="timer" class="timer" aria-live="polite">50:00</div>
+
+  <div id="gate" class="overlay" role="dialog" aria-modal="true">
+    <div class="gate">
+      <h1>Final Exam – Modules 1–7</h1>
+      <p class="meta">80 questions • 50 minutes • One second‑chance per missed auto‑graded item (worth half credit).</p>
+      <ul class="legend">
+        <li><span class="badge">16 T/F</span></li>
+        <li><span class="badge">48 Multiple Choice</span></li>
+        <li><span class="badge">16 Short Answer (scored 0–10 each)</span></li>
+      </ul>
+      <details>
+        <summary>Instructions</summary>
+        <ul>
+          <li>Click <b>I am ready</b> to reveal the exam and begin the 50‑minute timer.</li>
+          <li>Click <b>Grade</b> at the bottom to score auto‑graded sections. Missed items unlock a one‑time <b>Second Chance</b> worth half credit.</li>
+          <li>Enter points (0–10) for each Short Answer; these count toward your overall grade.</li>
+          <li>Click <b>Rescore</b> after second‑chance attempts and short‑answer scoring.</li>
+        </ul>
+      </details>
+      <button id="startBtn" class="btn" aria-describedby="timer">I am ready</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="bar container">
+      <div>
+        <div class="pill">Business Law Today: Essentials – Modules 1–7</div>
+        <h1>Comprehensive Final Exam</h1>
+      </div>
+      <div class="score-card" id="scoreCard">Score: —</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section" id="about">
+      <h2>Read This Fictional Case for Short‑Answer Questions</h2>
+      <p class="meta">Refer back to this story when answering the short‑answer section.</p>
+      <div id="story" class="story"></div>
+    </section>
+
+    <section class="section" id="tfSection">
+      <h2>Part A — True / False (16 items)</h2>
+      <div id="tfList"></div>
+    </section>
+
+    <section class="section" id="mcSection">
+      <h2>Part B — Multiple Choice (48 items)</h2>
+      <div id="mcList"></div>
+    </section>
+
+    <section class="section" id="saSection">
+      <h2>Part C — Short Answer (16 prompts)</h2>
+      <p class="meta">Each response is scored 0–10 by the grader. Use the case above where prompted.</p>
+      <div id="saList"></div>
+    </section>
+
+    <div class="sticky-bottom">
+      <button id="gradeBtn" class="btn">Grade</button>
+      <button id="rescoreBtn" class="btn secondary" disabled>Rescore</button>
+      <button id="resetBtn" class="btn ghost">Reset</button>
+    </div>
+  </main>
+
+  <script>
+  // ====== DATA ======
+  const story = `Raven Ridge Outfitters, LLC (RRO) is a North Carolina outdoor retail startup founded by three friends: Alex (CEO), Priya (COO), and Mateo (CFO). They draft an Operating Agreement but forget to adopt formal written bylaws for their later‑formed corporation when venture capital arrives. The company sells safety gear and licenses a patented avalanche‑rescue beacon from BeaconTech, Inc. under a five‑year license with a noncompete clause. 
+
+To scale quickly, RRO hires Casey as a sales manager on an at‑will basis and contracts with Harper, an independent contractor, to build a custom e‑commerce site. The online checkout uses a clickwrap agreement. Priya also signs a franchise agreement to open branded kiosks in ski resorts; the agreement requires using franchisor‑approved vendors.
+
+A shipment of climbing ropes from supplier PeakLine arrives with latent defects. After a customer fall, RRO issues a recall and fields a negligence claim. Meanwhile, Alex authorizes an unlicensed friend to perform electrical work at a kiosk to save money. Separately, a viral post falsely claims RRO ‘knowingly sells counterfeit harnesses,’ hurting sales. 
+
+As cash tightens, Mateo pledges inventory as collateral for a line of credit and files a UCC‑1. Weeks later, RRO prepays one favored creditor while insolvent. Eventually, RRO files Chapter 11 to reorganize. During the case, a former employee alleges ADA discrimination, and BeaconTech accuses RRO of trademark dilution after RRO launches a confusingly similar ‘RavenTech’ sub‑brand online. 
+
+Before confirmation, Casey, still employed, posts exaggerated product claims. A customer relies on them and sues for misrepresentation. Harper, the contractor, claims additional payment based on an ‘illusory promise’ email from Alex. A minority shareholder also sues to inspect books, and a kiosk shut down triggers a wrongful termination dispute with the franchisor.`;
+
+  // True/False (16)
+  const tf = [
+    {t:"Administrative law can include both federal and state agency rules and decisions.", a:true},
+    {t:"Standing to sue and personal jurisdiction are the same legal concept.", a:false},
+    {t:"Under common law, courts give weight to precedent through stare decisis.", a:true},
+    {t:"A clickwrap acceptance of terms at checkout generally forms an enforceable contract.", a:true},
+    {t:"The preexisting duty rule allows a raise in price for doing what was already promised.", a:false},
+    {t:"Strict liability may apply to abnormally dangerous activities even without proof of fault.", a:true},
+    {t:"Defamation requires a false statement of fact published to a third party.", a:true},
+    {t:"Trademark dilution requires proof of consumer confusion in ordinary purchasers.", a:false},
+    {t:"Minors’ contracts are void against the adult in all circumstances.", a:false},
+    {t:"An exculpatory clause can never be enforced in recreational activities.", a:false},
+    {t:"A novation substitutes a new party and releases the original obligor.", a:true},
+    {t:"A PMSI in consumer goods is automatically perfected without filing a financing statement.", a:true},
+    {t:"Under Title VII, disparate impact refers to intentional discrimination only.", a:false},
+    {t:"Piercing the corporate veil can occur when owners commingle personal and corporate assets.", a:true},
+    {t:"In Chapter 11, the debtor in possession typically continues operating the business.", a:true},
+    {t:"Under respondeat superior, a principal is never liable for an agent’s negligent acts.", a:false}
+  ];
+
+  // Multiple Choice (48)
+  const mc = [
+    {q:"Which is NOT a source of American law?", options:["Administrative rules","Judicial precedent","Executive orders","Corporate bylaws"], a:3},
+    {q:"Personal jurisdiction concerns:", options:["Power over the subject matter","Power over the parties","Proper county for trial","Whether plaintiff was injured"], a:1},
+    {q:"Best ADR when parties want a binding third‑party decision?", options:["Negotiation","Mediation","Arbitration","Mini‑trial"], a:2},
+    {q:"Which is <em>required</em> for negligence?", options:["Duty, breach, causation, damages","Intent","Privity","Malice"], a:0},
+    {q:"Proximate cause asks whether:", options:["Defendant owed a duty","Damages were foreseeable","Defendant acted intentionally","Plaintiff assumed risk"], a:1},
+    {q:"Battery requires:", options:["Apprehension of harm only","Offensive contact","Publication to a third party","Extreme outrage"], a:1},
+    {q:"Under FCPA, U.S. firms may:", options:["Pay to win contracts","Make grease payments to speed routine acts","Bribe custom officials if local law allows","Hire agents to bribe"], a:1},
+    {q:"Which is an illusory promise?", options:["I will buy 500 units at $5 each.","I’ll purchase if I feel like it.","I accept your offer by email.","We agree to arbitrate disputes."], a:1},
+    {q:"Copyright protection attaches:", options:["Only after USPTO registration","Upon fixation in a tangible medium","After publication for 30 days","After notice ©"], a:1},
+    {q:"Trademark infringement turns primarily on:", options:["Likelihood of confusion","Proof of malice","Exact copying","Registration status"], a:0},
+    {q:"The mailbox rule generally means an acceptance is effective:", options:["When received","When sent","When read","When filed"], a:1},
+    {q:"A minor’s contract for necessaries is:", options:["Enforceable against the adult only","Void","Voidable but liable for reasonable value","Unenforceable by anyone"], a:2},
+    {q:"A contract with an unlicensed contractor in a licensing state is typically:", options:["Enforceable by the contractor","Unenforceable as illegal","Always voidable by customer only","Valid if partly performed"], a:1},
+    {q:"Which clause is enforceable if reasonable and tied to a legitimate interest?", options:["Penalty","Noncompete","Exculpatory clause for hospitals","Secret arbitration"], a:1},
+    {q:"Substantial performance means:", options:["Any breach excuses performance","Good‑faith minor deviations with damages","No deviations allowed","Only time is of the essence"], a:1},
+    {q:"Remedy that orders a party to perform the contract:", options:["Rescission","Specific performance","Reformation","Injunction"], a:1},
+    {q:"Liquidated damages are enforceable when:", options:["Damages were hard to estimate and amount is reasonable","They punish breach","They exceed actual loss massively","They are in every boilerplate"], a:0},
+    {q:"Which must be in writing under the Statute of Frauds?", options:["Sale of goods for $450","One‑year employment fully performable within 6 months","Contract for land","Cash sale at farmer’s market"], a:2},
+    {q:"Quasi‑contract prevents:", options:["Over‑performance","Unjust enrichment","Unfair competition","Liquidation"], a:1},
+    {q:"Perfection of a security interest by filing uses:", options:["UCC‑1 financing statement","UCC‑9 form","Promissory note","Mechanic’s lien"], a:0},
+    {q:"Priority generally goes to:", options:["First to attach","First to perfect","Largest creditor","Secured party with lowest rate"], a:1},
+    {q:"A surety is:", options:["Secondarily liable","Primarily liable","Never liable","Only liable after judgment"], a:1},
+    {q:"Automatic stay does NOT stop:", options:["Wage garnishment","Domestic support actions","Collection calls","Foreclosure"], a:1},
+    {q:"Debtor in Possession (DIP) is typical in:", options:["Chapter 7","Chapter 11","Chapter 12","Chapter 13"], a:1},
+    {q:"Agency exists when:", options:["There is consent and control","There is payment only","A contract is written","The agent is licensed"], a:0},
+    {q:"Under respondeat superior, the principal is liable for:", options:["Agent’s negligence within scope","Agent’s frolic outside scope","Agent’s intentional tort unrelated","Independent contractor’s acts always"], a:0},
+    {q:"Equal Dignity Rule requires:", options:["Agent paid equally","Written authority when underlying contract must be written","Equal pay for equal work","Equal shares"], a:1},
+    {q:"Best defense to <em>disparate impact</em> claim:", options:["BFOQ","Business necessity","After‑acquired evidence","Lack of standing"], a:1},
+    {q:"IRCA requires employers to:", options:["Use E‑Verify only","Complete Form I‑9","Sponsor H‑1B for all grads","Retain tax returns"], a:1},
+    {q:"Sole proprietorship characteristic:", options:["Limited liability","Double taxation","Pass‑through taxation","Separate legal person"], a:2},
+    {q:"General partners have:", options:["Limited liability","Joint and several liability","No tort liability","Shield by default"], a:1},
+    {q:"LLC combines:", options:["Pass‑through + limited liability","Double tax + unlimited liability","No filings + limited liability","Strict formalities only"], a:0},
+    {q:"Dissolution begins:", options:["Winding up","Formation","Piercing veil","Ultra vires"], a:0},
+    {q:"Close corporations are at higher risk of veil piercing due to:", options:["Formal boards","Public trading","Informality and commingling","SEC registration"], a:2},
+    {q:"Shareholders may bring a(n):", options:["Derivative suit on corp’s behalf","Criminal indictment","Agency appeal","Bankruptcy appeal"], a:0},
+    {q:"Preemptive rights give existing shareholders:", options:["Right to dividends","First option to buy new shares","Right to fire officers","Right to dissolve company"], a:1},
+    {q:"Ultra vires acts are:", options:["Within express powers","Beyond corporate authority","Tortious only","Always criminal"], a:1},
+    {q:"In Raven Ridge case, the supplier’s latent defects most directly raise:", options:["Strict liability for abnormally dangerous activity","Product liability claims","Trademark infringement","Patent expiration"], a:1},
+    {q:"‘RavenTech’ likely raises:", options:["Copyright fair use","Trademark dilution/confusion","Trade secret theft","Patent misuse"], a:1},
+    {q:"Favoring one creditor pre‑petition suggests:", options:["Preferential transfer","Fraudulent conveyance only","Novation","Assumption"], a:0},
+    {q:"Posting exaggerated claims that customers rely on risks:", options:["Negligence per se","Fraudulent misrepresentation","Battery","Workers’ comp"], a:1},
+    {q:"Independent contractor Harper primarily implies:", options:["No vicarious liability for ordinary negligence","Strict vicarious liability","Automatic agency termination","Employee benefits owed"], a:0},
+    {q:"Clickwrap at checkout is generally:", options:["Unenforceable","Valid acceptance if conspicuous","Valid only on paper","Void against minors"], a:1},
+    {q:"Unlicensed electrical work contract in a licensing state is:", options:["Enforceable by contractor","Likely illegal and unenforceable","Valid if customer benefited","Ratified automatically"], a:1},
+    {q:"Fired kiosk under franchise law needs:", options:["No notice","Good cause + opportunity to cure","Strict liability","Judicial estoppel"], a:1},
+    {q:"UCC‑1 filing perfects security interest in:", options:["Real property","Consumer goods automatically only","Most business inventory","Personal goodwill"], a:2},
+    {q:"ADA requires:", options:["No accommodations ever","Reasonable accommodation for qualified individuals","Preference in promotion","Citizenship"], a:1},
+    {q:"Business Judgment Rule protects directors who:", options:["Act in good faith and informed manner","Guarantee profits","Ignore conflicts","Hide records"], a:0},
+    {q:"Statute of Frauds requires writing for:", options:["Five‑month services contract","Sale of goods $600","Tort release","At‑will employment"], a:1},
+    {q:"Mechanic’s lien attaches to:", options:["Personal property held","Real estate improved","Accounts receivable","Securities"], a:1}
+  ];
+
+  // Short Answer (16)
+  const sa = [
+    {p:"(Story) Identify two potential tort claims arising from the PeakLine rope incident and analyze RRO’s best defenses."},
+    {p:"(Story) Apply the elements of negligence (duty, breach, causation, damages) to the customer fall scenario."},
+    {p:"(Story) Is the kiosk electrical contract enforceable? Explain under licensing/legality rules."},
+    {p:"(Story) Evaluate the defamation post about ‘counterfeit harnesses.’ What must RRO prove? Any defenses for the poster?"},
+    {p:"(Story) Classify Casey’s status (employee vs. independent contractor) and explain respondeat superior implications."},
+    {p:"(Story) Does the franchisor have grounds for termination? Discuss notice/opportunity to cure and good faith."},
+    {p:"(Story) Analyze whether ‘RavenTech’ creates trademark infringement or dilution. Distinguish both theories."},
+    {p:"(Story) For BeaconTech’s patent license, identify two contract clauses you would check to assess breach or remedies."},
+    {p:"(Story) Harper claims additional payment based on an illusory promise. Explain why a promise might be illusory and outcome."},
+    {p:"(Story) During Chapter 11, outline DIP powers and what a reorganization plan must include."},
+    {p:"(Story) Was the pre‑petition payment a preferential transfer? State elements and likely result."},
+    {p:"(Story) What perfection and priority issues arise from pledging inventory?"},
+    {p:"General) Explain the Equal Dignity Rule and give a business example when it applies."},
+    {p:"General) Contrast unilateral vs. bilateral contracts with one example of each from ecommerce."},
+    {p:"General) When will courts pierce the corporate veil? Provide two Raven Ridge facts that heighten risk."},
+    {p:"General) Identify two agreements requiring writing under the Statute of Frauds and two that do not."}
+  ];
+
+  // ====== RENDER ======
+  const tfList = document.getElementById('tfList');
+  const mcList = document.getElementById('mcList');
+  const saList = document.getElementById('saList');
+  document.getElementById('story').textContent = story;
+
+  tf.forEach((item, idx)=>{
+    const q = document.createElement('div'); q.className='q'; q.dataset.kind='tf'; q.dataset.index=idx;
+    q.innerHTML = `<h4>A${idx+1}. ${item.t}</h4>
+      <div class="answers">
+        <label><input type="radio" name="tf${idx}" value="true"> True</label>
+        <label><input type="radio" name="tf${idx}" value="false"> False</label>
+      </div>`;
+    tfList.appendChild(q);
+  });
+
+  mc.forEach((item, idx)=>{
+    const q = document.createElement('div'); q.className='q'; q.dataset.kind='mc'; q.dataset.index=idx;
+    const opts = item.options.map((o,i)=>`<label><input type="radio" name="mc${idx}" value="${i}"> ${o}</label>`).join('');
+    q.innerHTML = `<h4>B${idx+1}. ${item.q}</h4><div class="answers">${opts}</div>`;
+    mcList.appendChild(q);
+  });
+
+  sa.forEach((item, idx)=>{
+    const q = document.createElement('div'); q.className='q'; q.dataset.kind='sa'; q.dataset.index=idx;
+    q.innerHTML = `<h4>C${idx+1}. ${item.p}</h4>
+      <div class="short">
+        <textarea placeholder="Your analysis / answer..."></textarea>
+        <div class="points">
+          <label for="sap${idx}">Points (0–10)</label>
+          <input id="sap${idx}" type="number" min="0" max="10" step="1" value="0">
+        </div>
+      </div>`;
+    saList.appendChild(q);
+  });
+
+  // ====== TIMER & GATE ======
+  let remaining = 50*60; // seconds
+  let tHandle = null;
+  const timer = document.getElementById('timer');
+  const gate = document.getElementById('gate');
+  const startBtn = document.getElementById('startBtn');
+  const scoreCard = document.getElementById('scoreCard');
+
+  const fmt = s=>{
+    const m = Math.floor(s/60), ss = s%60; return `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+  }
+  const tick = ()=>{
+    remaining--; if(remaining<=0){ clearInterval(tHandle); remaining=0; timer.classList.add('over'); gradeExam(true); }
+    if(remaining<=5*60) timer.classList.add('soon');
+    timer.textContent = fmt(remaining);
+  }
+
+  startBtn.addEventListener('click', ()=>{
+    gate.classList.add('hidden');
+    document.body.style.overflow='auto';
+    timer.textContent = fmt(remaining);
+    if(!tHandle) tHandle=setInterval(tick,1000);
+  });
+
+  // Prevent scrolling until start
+  document.body.style.overflow='hidden';
+
+  // ====== GRADING ======
+  const gradeBtn = document.getElementById('gradeBtn');
+  const rescoreBtn = document.getElementById('rescoreBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  // Track wrongs for second chance
+  const wrongTF = new Set();
+  const wrongMC = new Set();
+
+  function gradeExam(auto=false){
+    // Clear markers
+    document.querySelectorAll('.q').forEach(el=>{el.classList.remove('wrong','right')});
+
+    let earned = 0, possible = 0;
+
+    // TF
+    tf.forEach((item, idx)=>{
+      const q = document.querySelector(`.q[data-kind="tf"][data-index="${idx}"]`);
+      const sel = q.querySelector('input[type="radio"]:checked');
+      const val = sel? (sel.value==='true') : null;
+      const wasWrong = wrongTF.has(idx);
+      const correct = (val===item.a);
+      const already = wasWrong? 0.5 : 1; // possible for this attempt
+      possible += already; // second chance worth half
+      if(correct){ earned += already; q.classList.add('right'); }
+      else { q.classList.add('wrong'); wrongTF.add(idx); ensureSecondChance(q,'tf',idx); }
+    });
+
+    // MC
+    mc.forEach((item, idx)=>{
+      const q = document.querySelector(`.q[data-kind="mc"][data-index="${idx}"]`);
+      const sel = q.querySelector('input[type="radio"]:checked');
+      const val = sel? Number(sel.value): null;
+      const wasWrong = wrongMC.has(idx);
+      const isCorrect = (val===item.a);
+      const already = wasWrong? 0.5 : 1;
+      possible += already;
+      if(isCorrect){ earned += already; q.classList.add('right'); }
+      else { q.classList.add('wrong'); wrongMC.add(idx); ensureSecondChance(q,'mc',idx,item); }
+    });
+
+    // SA
+    sa.forEach((item, idx)=>{
+      const pts = Number(document.getElementById(`sap${idx}`).value||0);
+      earned += Math.max(0, Math.min(10, pts));
+      possible += 10;
+    });
+
+    const pct = possible? (earned/possible*100):0;
+    scoreCard.textContent = `Score: ${earned.toFixed(1)} / ${possible.toFixed(1)} (${pct.toFixed(1)}%)`;
+
+    // enable rescore after first grading
+    rescoreBtn.disabled = false;
+  }
+
+  function ensureSecondChance(container, kind, idx, item){
+    if(container.querySelector('.second-chance')) return;
+    const sc = document.createElement('div'); sc.className='second-chance';
+    if(kind==='tf'){
+      sc.innerHTML = `<div class="answers"><label><input type="radio" name="tf2${idx}" value="true"> True</label><label><input type="radio" name="tf2${idx}" value="false"> False</label></div>`;
+    } else if(kind==='mc'){
+      const opts = (item.options||[]).map((o,i)=>`<label><input type=\"radio\" name=\"mc2${idx}\" value=\"${i}\"> ${o}</label>`).join('');
+      sc.innerHTML = `<div><small>Second Chance (worth half credit)</small><div class="answers">${opts}</div></div>`;
+    }
+    container.appendChild(sc);
+  }
+
+  function rescore(){
+    let earned = 0, possible = 0;
+
+    // TF — second chance only for those previously wrong
+    tf.forEach((item, idx)=>{
+      const wasWrong = wrongTF.has(idx);
+      const q = document.querySelector(`.q[data-kind="tf"][data-index="${idx}"]`);
+      const primary = q.querySelector('input[name="tf'+idx+'"]:checked');
+      const primaryVal = primary? (primary.value==='true'):null;
+      if(!wasWrong){ // keep first‑round result
+        possible += 1; if(primaryVal===item.a){ earned += 1; q.classList.add('right'); } else { q.classList.add('wrong'); }
+      } else {
+        // second‑chance half credit
+        const sc = q.querySelector('input[name="tf2'+idx+'"]:checked');
+        possible += 0.5; if(sc && (sc.value==='true')===item.a){ earned += 0.5; q.classList.add('right'); } else { q.classList.add('wrong'); }
+      }
+    });
+
+    // MC — second chance for those previously wrong
+    mc.forEach((item, idx)=>{
+      const wasWrong = wrongMC.has(idx);
+      const q = document.querySelector(`.q[data-kind="mc"][data-index="${idx}"]`);
+      const primary = q.querySelector('input[name="mc'+idx+'"]:checked');
+      const primaryVal = primary? Number(primary.value):null;
+      if(!wasWrong){ possible += 1; if(primaryVal===item.a){ earned += 1; q.classList.add('right'); } else { q.classList.add('wrong'); } }
+      else {
+        const sc = q.querySelector('input[name="mc2'+idx+'"]:checked');
+        possible += 0.5; if(sc && Number(sc.value)===item.a){ earned += 0.5; q.classList.add('right'); } else { q.classList.add('wrong'); }
+      }
+    });
+
+    // SA
+    sa.forEach((_, idx)=>{ const pts = Number(document.getElementById('sap'+idx).value||0); earned += Math.max(0,Math.min(10,pts)); possible += 10; });
+
+    const pct = possible? (earned/possible*100):0;
+    scoreCard.textContent = `Score: ${earned.toFixed(1)} / ${possible.toFixed(1)} (${pct.toFixed(1)}%)`;
+  }
+
+  gradeBtn.addEventListener('click', ()=> gradeExam(false));
+  rescoreBtn.addEventListener('click', ()=> rescore());
+  resetBtn.addEventListener('click', ()=>{ window.location.reload(); });
+
+  </script>
+</body>
+</html>
